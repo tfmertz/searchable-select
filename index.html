@@ -1,0 +1,81 @@
+<html>
+<head>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="main-container">
+        <section class="white-block">
+            <article class="max-width-block">
+                <h2>Teacher Assignments</h2>
+                <div class="contained">
+                    <label for="user_classrooms">Classrooms</label>
+                    <select id="user_classrooms" class="searchable-select" name="user[classrooms][]" multiple="multiple">
+                        <option value="5800" selected="selected">Sara P</option>
+                        <option value="5801">Tom M</option>
+                        <option value="5802">Mark N</option>
+                        <option value="5803">Daniele G</option>
+                        <option value="5804">Dan P</option>
+                        <option value="5805">Jacob S</option>
+                    </select>
+                    <div class="left-col"></div>
+                    <div class="right-col">
+                        <h6>Selected Teachers:</h6>
+                        <ul class="no-list-style student-float-list" id="selected-classrooms-list">
+                            <li>No teachers are currently selected.</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <h2>Student Assignments (Optional)</h2>
+                <div class="contained">
+                    <label for="user_students">Classrooms</label>
+                    <select
+                            id="user_students"
+                            class="searchable-select"
+                            name="user[students][]"
+                            multiple="multiple"
+                            data-output-class="#selected-students-list"
+                            data-search-placeholder="Hello"
+                            data-select-all="Select all students"
+                            data-remove-all="Deselect all students"
+                    >
+                        <option value="5800" selected="selected">Sara P</option>
+                        <option value="5801">Tom M</option>
+                        <option value="5802">Mark N</option>
+                        <option value="5803">Daniele G</option>
+                        <option value="5804">Dan P</option>
+                        <option value="5805">Jacob S</option>
+                    </select>
+                    <div class="left-col"></div>
+                    <div class="right-col">
+                        <h6>Selected Students:</h6>
+                        <p>These students are assigned to this teacher's classroom.</p>
+                        <ul class="no-list-style student-float-list" id="selected-students-list"><li>No students are currently selected.</li></ul>
+
+                        <h6>Students assigned to other teachers:</h6>
+                        <p>These students cannot be removed from the list. You must remove the teacher who the student is assigned to from the previous section in order to remove the student from this list.</p>
+                        <ul class="no-list-style student-float-list" id="selected-students-related-list">
+                            <li>No students are currently assigned.</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <ul class="row-links no-list-style">
+                    <li>
+                        <div id="loading-user" class="load" data-content="Saving User"> </div>
+                        <a id="create-user-button" href="#" class="btn btn-med btn-green">save</a>
+                    </li>
+                    <li><a id="cancel-edits-user-button" href="#" class="btn btn-med btn-white">Cancel</a></li>
+                </ul>
+            </article>
+        </section>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="searchable-select.js"></script>
+    <script>
+        $('.searchable-select').searchableSelect();
+    </script>
+</body>
+</html>
