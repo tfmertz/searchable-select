@@ -4,7 +4,6 @@
    * Overridable. Starts the plugin.
    */
   function init() {
-    var self = this;
     // Hide the select and label associated with this select
     this.select.hide();
     var id = this.select.attr('id');
@@ -35,20 +34,7 @@
     var initialSelectAllHTML = this.initialSelectAllHTML.replace('{{selectAllText}}', this.selectAllText);
     this.parent.find(this.containerClass).before(initialSelectAllHTML);
 
-    // Add click listener for the select all
-    this.parent.find(this.selectAllClass).change(function() {
-      // If checked we select all, otherwise deselect all
-      if ($(this).is(':checked')) {
-        // Change just the text node for the label, not the input
-        $(this).parent()[0].childNodes[1].nodeValue = " " + self.removeAllText;
-        setAllOptions(self.selectOptions, true);
-      } else {
-        $(this).parent()[0].childNodes[1].nodeValue = " " + self.selectAllText;
-        setAllOptions(self.selectOptions, false);
-      }
-      // In either case, update our display
-      self.update();
-    });
+    setupEventListeners(this);
 
     this.update();
   }
@@ -76,6 +62,49 @@
     if (removeAllText) {
       self.removeAllText = removeAllText;
     }
+  }
+
+  /**
+   * Set up our event listeners
+   * @param self
+   */
+  function setupEventListeners(self) {
+    // Set up the click listeners for our elements
+    self.parent.on('click', self.btnSelectClass, function(e) {
+      e.preventDefault();
+
+      var value = $(this).attr('data-value');
+      selectOption(value, self.selectOptions, true);
+      self.update();
+    });
+
+    self.parent.on('click', self.btnRemoveClass, function(e) {
+      e.preventDefault();
+
+      var value = $(this).attr('data-value');
+      selectOption(value, self.selectOptions, false);
+      self.update();
+    });
+
+    self.parent.on('keyup', self.searchClass, function() {
+      self.currentSearchText = $(this).val().trim().toLowerCase();
+      self.filterSelectableItems();
+    });
+
+    // Add click listener for the select all checkbox
+    self.parent.find(self.selectAllClass).change(function() {
+      // If checked we select all, otherwise deselect all
+      if ($(this).is(':checked')) {
+        // Change just the text node for the label, not the input
+        $(this).parent()[0].childNodes[1].nodeValue = ' ' + self.removeAllText;
+        setAllOptions(self.selectOptions, true);
+      } else {
+        $(this).parent()[0].childNodes[1].nodeValue = ' ' + self.selectAllText;
+        setAllOptions(self.selectOptions, false);
+      }
+      // In either case, update our display
+      self.update();
+    });
   }
 
   /**
@@ -116,30 +145,7 @@
     // Prefill the selected options in our given output location
     this.parent.find(this.outputContainerClass).html(this.buildSelectedOutput());
 
-    var self = this;
-    // Set up the click listeners for our elements
-    this.parent.find(this.btnSelectClass).click(function(e) {
-      e.preventDefault();
-
-      var value = $(this).attr('data-value');
-      selectOption(value, self.selectOptions, true);
-      self.update();
-    });
-
-    this.parent.find(this.btnRemoveClass).click(function(e) {
-      e.preventDefault();
-
-      var value = $(this).attr('data-value');
-      selectOption(value, self.selectOptions, false);
-      self.update();
-    });
-
-    this.parent.find(this.searchClass).keyup(function() {
-      self.currentSearchText = $(this).val().trim().toLowerCase();
-      self.filterSelectableItems();
-    });
-
-    self.filterSelectableItems();
+    this.filterSelectableItems();
   }
 
   /**
@@ -183,11 +189,15 @@
       var isSelected = $(option).is(':selected');
       var btnSelectClass = isSelected ? '' : self.btnSelectClass.replace('.', '');
       var btnText = isSelected ? self.selectedBtnText : self.btnText;
+      var injectText = $(option).attr('data-inject');
+      var injectableContent = injectText ? injectText : '';
+
       var optionTemplate = self.initialOptionHTML;
       optionTemplate = optionTemplate.replace('{{optionValue}}', $(option).val());
       optionTemplate = optionTemplate.replace('{{optionTitle}}', $(option).text());
       optionTemplate = optionTemplate.replace('{{btnText}}', btnText);
       optionTemplate = optionTemplate.replace('{{selectedBtnClass}}', btnSelectClass);
+      optionTemplate = optionTemplate.replace('{{injectableContent}}', injectableContent);
       options += optionTemplate;
     });
 
@@ -249,7 +259,7 @@
    * @returns {string}
    */
   function initialOptionHTML() {
-    return '<li class="classroom-row">{{optionTitle}} <span class="{{selectedBtnClass}}" data-value="{{optionValue}}">{{btnText}}</span></li>';
+    return '<li class="classroom-row">{{optionTitle}} <span class="injectable">{{injectableContent}}</span><span class="{{selectedBtnClass}}" data-value="{{optionValue}}">{{btnText}}</span></li>';
   }
 
   /**
@@ -303,8 +313,11 @@
       options.currentSearchText = '';
       options.emptyOutput = '';
       options.init();
+
+      // Save the searchableSelect object onto the select to access later
+      $(select).data('searchableSelect', options);
     });
 
     return this;
-  }
+  };
 }(jQuery));
