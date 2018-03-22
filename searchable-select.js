@@ -1,4 +1,4 @@
-;(function ($) {
+(function ($) {
 
   /**
    * Overridable. Starts the plugin.
@@ -21,10 +21,10 @@
     var outputClass = this.parent.find(this.outputContainerClass);
 
     if (containerClass.length === 0) {
-      console.warn('containerClass \''+this.containerClass+'\' not found. Is your select in the same div?');
+      throw 'containerClass \''+this.containerClass+'\' not found. Is your select in the same div?';
     }
     if (outputClass.length === 0) {
-      console.warn('outputClass \''+this.outputContainerClass+'\' not found. Is your select in the same div or does it define the outputClass on its data-output-class attribute?');
+      throw 'outputClass \''+this.outputContainerClass+'\' not found. Is your select in the same div or does it define the outputClass on its data-output-class attribute?';
     }
 
     // Store the current empty html that is in the output container
@@ -142,7 +142,7 @@
     // Inject the initial html to the container class
     this.parent.find(this.containerClass).html(initialHTML);
 
-    // Prefill the selected options in our given output location
+    // Pre-fill the selected options in our given output location
     this.parent.find(this.outputContainerClass).html(this.buildSelectedOutput());
 
     this.filterSelectableItems();
@@ -180,7 +180,7 @@
   }
 
   /**
-   * Overridable. Creates and returns the searchable-select options to match the multiselect
+   * Overridable. Creates and returns the searchable-select options to match the multi select
    */
   function buildSelectOptions() {
     var self = this;
@@ -233,15 +233,15 @@
    */
   function initialHTML() {
     return '<div class="search-w-results">\n' +
-    '                            <div class="block-fixed">\n' +
-    '                                <div class="form">\n' +
-    '                                    <input type="text" class="teacher search-block" placeholder="{{placeholderText}}" value="{{currentSearchText}}">\n' +
-    '                                </div>\n' +
-    '                            </div>\n' +
-    '                            <div class="block-scrollable">\n' +
-    '                                <ul class="list-results role-assign" id="classrooms-results">{{initialOptions}}</ul>\n' +
-    '                            </div>\n' +
-    '                        </div>';
+      '                            <div class="block-fixed">\n' +
+      '                                <div class="form">\n' +
+      '                                    <input type="text" class="teacher search-block" placeholder="{{placeholderText}}" value="{{currentSearchText}}">\n' +
+      '                                </div>\n' +
+      '                            </div>\n' +
+      '                            <div class="block-scrollable">\n' +
+      '                                <ul class="list-results role-assign" id="classrooms-results">{{initialOptions}}</ul>\n' +
+      '                            </div>\n' +
+      '                        </div>';
   }
 
   /**
@@ -251,7 +251,7 @@
   function initialSelectAllHTML() {
     return '<div class="form">\n' +
       '                        <p><label class="label-default label-center"><input type="checkbox" id="select-all-teachers" class="searchable-select-all"> {{selectAllText}}</label></p>\n' +
-      '                    </div>'
+      '                    </div>';
   }
 
   /**
