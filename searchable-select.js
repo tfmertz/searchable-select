@@ -146,6 +146,9 @@
     this.parent.find(this.outputContainerClass).html(this.buildSelectedOutput());
 
     this.filterSelectableItems();
+
+    // Trigger the change on the select for other items that might be listening
+    this.select.trigger('change');
   }
 
   /**
@@ -312,10 +315,11 @@
       options.parent = $(select).parent();
       options.currentSearchText = '';
       options.emptyOutput = '';
-      options.init();
 
       // Save the searchableSelect object onto the select to access later
       $(select).data('searchableSelect', options);
+
+      options.init();
     });
 
     return this;
